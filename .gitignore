@@ -1,0 +1,7 @@
+.direnv/
+.envrc
+result
+result-*
+
+# Local Codex workspace metadata
+.codex/
