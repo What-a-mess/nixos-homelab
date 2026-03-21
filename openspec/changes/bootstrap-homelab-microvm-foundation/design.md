@@ -77,6 +77,19 @@ Rationale:
 Alternatives considered:
 - Make `storage-vm` the owner of the disk and have `media-vm` mount over NFS. Rejected because it adds protocol complexity and risks breaking media workflow assumptions.
 
+### 4a. The system disk uses btrfs subvolumes while the data disk remains ext4
+
+The host operating-system disk should use btrfs with separate subvolumes for `/`, `/nix`, and `/var/log`. `/boot` should remain a FAT32 EFI system partition. The dedicated bulk-data disk should continue to use ext4 and remain mounted separately at `/srv/data`.
+
+Rationale:
+- The user wants btrfs primarily for transparent compression on operating-system paths such as `/nix`.
+- Separating `/var/log` from the root subvolume preserves a clearer boundary between declarative system state and continuously changing runtime logs.
+- Keeping the bulk-data disk on ext4 preserves the simpler and already-established semantics for shared media and NAS data.
+
+Alternatives considered:
+- Use ext4 for both the system disk and the data disk. Rejected because it gives up btrfs compression on host system paths.
+- Move the dedicated bulk-data disk to btrfs as well. Rejected for the first stage because the immediate goal is system-disk compression, not changing the data-disk semantics that the VM-sharing model already depends on.
+
 ### 5. `media-vm` receives a unified data root
 
 `media-vm` should see downloads, media libraries, and any shared media-adjacent paths beneath one shared root such as `/data`, not as separate unrelated mounts.
@@ -133,7 +146,6 @@ Rollback strategy:
 
 ## Open Questions
 
-- Whether the second data disk should use `ext4` for simplicity or `btrfs` for snapshot-oriented operations.
 - Which container runtime inside each microVM best matches the desired declarative workflow.
 - Whether `storage-vm` should export the full media tree or only selected subtrees such as `movies` and `tv`.
 - Whether a separate writable `inbox` directory is needed in the first stage for human-uploaded media.

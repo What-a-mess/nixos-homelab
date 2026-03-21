@@ -12,7 +12,7 @@ This repository installs the `homelab` NixOS host defined in [`flake.nix`](/home
 This configuration expects:
 
 - An EFI system partition labeled `boot`
-- A root filesystem labeled `nixos`
+- A btrfs system partition labeled `nixos`
 - A data filesystem labeled `homelab-data`
 
 ## 1. Boot the Installer
@@ -33,11 +33,11 @@ The example below uses a single disk at `/dev/sda`. Adjust device names and size
 parted /dev/sda -- mklabel gpt
 parted /dev/sda -- mkpart ESP fat32 1MiB 512MiB
 parted /dev/sda -- set 1 esp on
-parted /dev/sda -- mkpart nixos ext4 512MiB 100GiB
+parted /dev/sda -- mkpart nixos btrfs 512MiB 100GiB
 parted /dev/sda -- mkpart homelab-data ext4 100GiB 100%
 
 mkfs.fat -F 32 -n boot /dev/sda1
-mkfs.ext4 -L nixos /dev/sda2
+mkfs.btrfs -L nixos /dev/sda2
 mkfs.ext4 -L homelab-data /dev/sda3
 ```
 
@@ -47,11 +47,29 @@ If you use a separate data disk, only the labels matter. The host configuration 
 
 ```bash
 mount /dev/disk/by-label/nixos /mnt
+btrfs subvolume create /mnt/@root
+btrfs subvolume create /mnt/@nix
+btrfs subvolume create /mnt/@log
+umount /mnt
+
+mount -o subvol=@root,compress=zstd /dev/disk/by-label/nixos /mnt
+mkdir -p /mnt/nix
+mount -o subvol=@nix,compress=zstd /dev/disk/by-label/nixos /mnt/nix
+mkdir -p /mnt/var/log
+mount -o subvol=@log,compress=zstd /dev/disk/by-label/nixos /mnt/var/log
 mkdir -p /mnt/boot
 mount /dev/disk/by-label/boot /mnt/boot
 mkdir -p /mnt/srv/data
 mount /dev/disk/by-label/homelab-data /mnt/srv/data
 ```
+
+This layout uses three btrfs subvolumes on the system partition:
+
+- `@root` mounted at `/`
+- `@nix` mounted at `/nix`
+- `@log` mounted at `/var/log`
+
+`/boot` remains a FAT32 EFI system partition, and the bulk-data disk remains `ext4`.
 
 ## 4. Generate Hardware Configuration
 
@@ -62,6 +80,13 @@ nixos-generate-config --root /mnt
 ```
 
 Do not reuse the repository's existing `hosts/homelab/hardware-configuration.nix` on a different machine without regenerating it.
+
+After generating the file, ensure it retains this repository's intended filesystem layout:
+
+- `/` mounted from the btrfs subvolume `@root`
+- `/nix` mounted from the btrfs subvolume `@nix`
+- `/var/log` mounted from the btrfs subvolume `@log`
+- `/boot` mounted from the FAT32 EFI partition labeled `boot`
 
 ## 5. Copy the Repository into the Target System
 
@@ -83,6 +108,8 @@ Then replace the repository's hardware config with the generated one:
 ```bash
 cp /mnt/hardware-configuration.nix /mnt/etc/nixos/hosts/homelab/hardware-configuration.nix
 ```
+
+If the generated hardware configuration does not already include the expected btrfs subvolume mounts, edit `hosts/homelab/hardware-configuration.nix` before running `nixos-install`.
 
 ## 6. Install the System from the Flake
 

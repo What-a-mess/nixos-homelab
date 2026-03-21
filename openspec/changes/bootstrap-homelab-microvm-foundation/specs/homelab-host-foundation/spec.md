@@ -21,3 +21,14 @@ The system SHALL keep operating-system storage separate from bulk homelab data s
 #### Scenario: Host preserves shared data during VM lifecycle changes
 - **WHEN** a first-stage microVM is recreated, disabled, or rolled back
 - **THEN** the bulk data on the dedicated data disk remains outside the VM root filesystem lifecycle
+
+### Requirement: Host uses a compressed btrfs system layout with isolated runtime logs
+The system SHALL mount the host operating-system disk as btrfs with separate subvolumes for the root filesystem, `/nix`, and `/var/log`, while keeping `/boot` on a FAT32 EFI system partition.
+
+#### Scenario: Host mounts the operating-system disk
+- **WHEN** the homelab host boots
+- **THEN** `/` mounts from a btrfs root subvolume, `/nix` mounts from a dedicated btrfs subvolume, and `/var/log` mounts from a dedicated btrfs subvolume with compression enabled
+
+#### Scenario: Host preserves data-disk semantics
+- **WHEN** the host mounts the dedicated bulk-data disk
+- **THEN** `/srv/data` remains on a separate ext4 filesystem rather than being merged into the btrfs system-disk layout
