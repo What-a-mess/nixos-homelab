@@ -13,6 +13,11 @@ in {
     hypervisor = "qemu";
     vcpu = storageVm.vcpu;
     mem = storageVm.memory;
+    interfaces = [
+      {
+        type = "user";
+      }
+    ];
 
     shares = [
       {

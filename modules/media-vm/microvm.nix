@@ -13,6 +13,11 @@ in {
     hypervisor = "qemu";
     vcpu = mediaVm.vcpu;
     mem = mediaVm.memory;
+    interfaces = [
+      {
+        type = "user";
+      }
+    ];
 
     shares = [
       {
