@@ -1,13 +1,13 @@
-{ homelab, ... }:
+{ homelab, lib, ... }:
 let
   inherit (homelab) storage users;
   mediaUid = users.media.uid;
   mediaGid = users.media.gid;
 in {
   fileSystems."/srv/data" = {
-    device = storage.disk.device;
-    fsType = storage.disk.fsType;
-    neededForBoot = false;
+    device = lib.mkDefault storage.disk.device;
+    fsType = lib.mkDefault storage.disk.fsType;
+    neededForBoot = lib.mkDefault false;
   };
 
   systemd.tmpfiles.rules = [

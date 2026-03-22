@@ -34,6 +34,10 @@
   };
 
   users = {
+    admin = {
+      name = "wamess";
+    };
+
     media = {
       name = "media";
       uid = 1000;
