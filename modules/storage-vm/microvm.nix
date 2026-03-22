@@ -15,6 +15,8 @@ in {
     mem = storageVm.memory;
     interfaces = [
       {
+        id = "storage0";
+        mac = "02:00:00:00:10:01";
         type = "user";
       }
     ];

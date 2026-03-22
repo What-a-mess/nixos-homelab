@@ -15,6 +15,8 @@ in {
     mem = mediaVm.memory;
     interfaces = [
       {
+        id = "media0";
+        mac = "02:00:00:00:20:01";
         type = "user";
       }
     ];
