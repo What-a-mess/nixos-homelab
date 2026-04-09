@@ -5,9 +5,11 @@
     nixpkgs.url = "github:NixOS/nixpkgs/nixos-25.11";
     microvm.url = "github:microvm-nix/microvm.nix";
     microvm.inputs.nixpkgs.follows = "nixpkgs";
+    agenix.url = "github:ryantm/agenix";
+    agenix.inputs.nixpkgs.follows = "nixpkgs";
   };
 
-  outputs = inputs@{ self, nixpkgs, microvm, ... }:
+  outputs = inputs@{ self, nixpkgs, microvm, agenix, ... }:
     let
       system = "x86_64-linux";
       homelab = import ./lib/homelab-config.nix;
@@ -23,6 +25,7 @@
     in {
       nixosConfigurations = {
         homelab = mkSystem [
+          agenix.nixosModules.default
           ./hosts/homelab
         ];
 
