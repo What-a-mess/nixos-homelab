@@ -132,8 +132,15 @@ Remove the installer media when prompted.
 
 - The host bootloader is `systemd-boot` in UEFI mode.
 - The host mounts `/srv/data` from the `homelab-data` filesystem.
-- This repository defines MicroVM workloads for `storage-vm` and `media-vm`.
+- This repository defines MicroVM workloads for `storage-vm`, `media-vm`, and `app-vm`.
 - Review user, SSH, and secret management before exposing the host to a network.
+
+## Application Tier Notes
+
+- `app-vm` is the default execution boundary for RSSHub and similar lightweight application services.
+- The first RSSHub deployment uses the official `chromium-bundled` image so browser automation support stays inside `app-vm` without a separate browserless sidecar.
+- No dedicated ingress layer is included yet; `app-vm` services are exposed through host-managed port forwarding.
+- Future services belong in `app-vm` only if they fit the same lightweight application-service boundary and do not require the shared media data model used by `media-vm`.
 
 ## Validation After First Boot
 
@@ -146,6 +153,8 @@ findmnt /boot
 findmnt /srv/data
 systemctl status microvm@storage-vm
 systemctl status microvm@media-vm
+systemctl status microvm@app-vm
+curl -I http://127.0.0.1:1200
 ```
 
 If a MicroVM fails to start, inspect:
@@ -153,4 +162,5 @@ If a MicroVM fails to start, inspect:
 ```bash
 journalctl -u microvm@storage-vm -b
 journalctl -u microvm@media-vm -b
+journalctl -u microvm@app-vm -b
 ```

@@ -18,6 +18,10 @@
     media-vm = {
       flake = self;
     };
+
+    app-vm = {
+      flake = self;
+    };
   };
 
   system.stateVersion = homelab.stateVersion;

@@ -11,6 +11,7 @@ in {
       ports.storage.smb
       ++ ports.storage.nfsTcp
       ++ [
+        ports.app.rsshub
         ports.media.jellyfin
         ports.media.qbittorrent
         ports.media.radarr

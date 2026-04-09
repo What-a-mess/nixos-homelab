@@ -35,6 +35,11 @@
           microvm.nixosModules.microvm
           ./vms/media-vm.nix
         ];
+
+        app-vm = mkSystem [
+          microvm.nixosModules.microvm
+          ./vms/app-vm.nix
+        ];
       };
     };
 }

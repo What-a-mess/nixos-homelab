@@ -49,6 +49,12 @@
       uid = 995;
       gid = 995;
     };
+
+    app = {
+      name = "app";
+      uid = 994;
+      gid = 994;
+    };
   };
 
   mediaVm = {
@@ -68,6 +74,18 @@
     vcpu = 2;
   };
 
+  appVm = {
+    memory = 2048;
+    vcpu = 2;
+    stateVolume = {
+      image = "/srv/data/vmstate/app-vm-state.img";
+      mountPoint = "/var/lib/app-services";
+      size = 8192;
+      fsType = "ext4";
+      label = "app-vm-state";
+    };
+  };
+
   ports = {
     storage = {
       smb = [ 139 445 ];
@@ -82,9 +100,14 @@
       radarr = 7878;
       prowlarr = 9696;
     };
+
+    app = {
+      rsshub = 1200;
+    };
   };
 
   images = {
+    rsshub = "ghcr.io/diygod/rsshub:chromium-bundled";
     jellyfin = "docker.io/jellyfin/jellyfin:latest";
     prowlarr = "lscr.io/linuxserver/prowlarr:latest";
     qbittorrent = "lscr.io/linuxserver/qbittorrent:latest";
