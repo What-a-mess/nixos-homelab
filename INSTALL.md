@@ -128,23 +128,9 @@ reboot
 
 Remove the installer media when prompted.
 
-## Post-Install Notes
-
-- The host bootloader is `systemd-boot` in UEFI mode.
-- The host mounts `/srv/data` from the `homelab-data` filesystem.
-- This repository defines MicroVM workloads for `storage-vm`, `media-vm`, and `app-vm`.
-- Review user, SSH, and secret management before exposing the host to a network.
-
-## Application Tier Notes
-
-- `app-vm` is the default execution boundary for RSSHub and similar lightweight application services.
-- The first RSSHub deployment uses the official `chromium-bundled` image so browser automation support stays inside `app-vm` without a separate browserless sidecar.
-- No dedicated ingress layer is included yet; `app-vm` services are exposed through host-managed port forwarding.
-- Future services belong in `app-vm` only if they fit the same lightweight application-service boundary and do not require the shared media data model used by `media-vm`.
-
 ## Validation After First Boot
 
-Run these checks on the installed system:
+Run these checks on the installed system. For bootstrap interpretation and extended first-boot guidance, treat [`docs/operations/first-boot.md`](./docs/operations/first-boot.md) as canonical.
 
 ```bash
 hostnamectl
@@ -154,6 +140,7 @@ findmnt /srv/data
 systemctl status microvm@storage-vm
 systemctl status microvm@media-vm
 systemctl status microvm@app-vm
+# If RSSHub is unavailable during bootstrap, see ./docs/operations/first-boot.md for expected states.
 curl -I http://127.0.0.1:1200
 ```
 
@@ -164,3 +151,13 @@ journalctl -u microvm@storage-vm -b
 journalctl -u microvm@media-vm -b
 journalctl -u microvm@app-vm -b
 ```
+
+## Next Steps
+
+After installation, use the operations guide for ongoing system management:
+
+- [`docs/operations/README.md`](./docs/operations/README.md)
+- [`docs/operations/architecture-map.md`](./docs/operations/architecture-map.md)
+- [`docs/operations/services.md`](./docs/operations/services.md)
+- [`docs/operations/secrets.md`](./docs/operations/secrets.md)
+- [`docs/operations/first-boot.md`](./docs/operations/first-boot.md)
