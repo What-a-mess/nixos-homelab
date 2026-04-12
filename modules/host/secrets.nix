@@ -1,22 +1,31 @@
-{ config, homelab, pkgs, ... }:
+{ lib, config, homelab, pkgs, ... }:
 let
   appSecretsHostPath = homelab.appVm.hostSecretsPath;
-  rsshubSecret = config.age.secrets.rsshub-env.path;
+  secretFile = ../../secrets/rsshub.env.age;
+  hasSecretFile = builtins.pathExists secretFile;
+  rsshubSecret =
+    if hasSecretFile then
+      config.age.secrets.rsshub-env.path
+    else
+      null;
 in {
   age.identityPaths = [ "/etc/ssh/ssh_host_ed25519_key" ];
-  age.secrets.rsshub-env = {
-    file = ../../secrets/rsshub.env.age;
-    path = "/run/agenix/rsshub.env";
-    mode = "0640";
-    owner = "root";
-    group = "root";
+
+  age.secrets = lib.mkIf hasSecretFile {
+    rsshub-env = {
+      file = secretFile;
+      path = "/run/agenix/rsshub.env";
+      mode = "0640";
+      owner = "root";
+      group = "root";
+    };
   };
 
   systemd.tmpfiles.rules = [
     "d ${appSecretsHostPath} 0750 root root - -"
   ];
 
-  systemd.services.export-app-vm-rsshub-secret = {
+  systemd.services.export-app-vm-rsshub-secret = lib.mkIf hasSecretFile {
     description = "Export decrypted RSSHub env file for app-vm";
     wantedBy = [ "multi-user.target" ];
     after = [ "agenix.service" ];
@@ -28,12 +37,8 @@ in {
     };
     script = ''
       install -d -m 0750 ${appSecretsHostPath}
-      if [ -f "${rsshubSecret}" ]; then
-        install -m 0640 "${rsshubSecret}" "${appSecretsHostPath}/rsshub.env"
-      else
-        rm -f "${appSecretsHostPath}/rsshub.env"
-      fi
+      install -m 0640 "${rsshubSecret}" "${appSecretsHostPath}/rsshub.env"
     '';
-    path = [ pkgs.coreutils pkgs.findutils ];
+    path = [ pkgs.coreutils ];
   };
 }
