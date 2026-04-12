@@ -5,8 +5,16 @@
   host = {
     hostName = "homelab";
     listenAddress = "0.0.0.0";
-    lanCidr = "192.168.1.0/24";
+    lanCidr = "192.168.31.0/24";
     workgroup = "WORKGROUP";
+    network = {
+      uplinkInterface = "enp4s0";
+      bridgeInterface = "br0";
+      address = "192.168.31.210";
+      prefixLength = 24;
+      gateway = "192.168.31.1";
+      dns = [ "192.168.31.1" ];
+    };
   };
 
   storage = {
@@ -60,6 +68,7 @@
   mediaVm = {
     memory = 4096;
     vcpu = 4;
+    address = "192.168.31.212";
     stateVolume = {
       image = "/srv/data/vmstate/media-vm-state.img";
       mountPoint = "/var/lib/media-stack";
@@ -70,13 +79,15 @@
   };
 
   storageVm = {
-    memory = 2048;
+    memory = 2304;
     vcpu = 2;
+    address = "192.168.31.211";
   };
 
   appVm = {
-    memory = 2048;
+    memory = 2304;
     vcpu = 2;
+    address = "192.168.31.213";
     hostSecretsPath = "/run/app-vm-secrets";
     guestSecretsPath = "/run/host-secrets";
     stateVolume = {

@@ -1,13 +1,6 @@
-{ homelab, lib, ... }:
+{ homelab, ... }:
 let
-  inherit (homelab) host mediaVm ports;
-  mkMediaForward = hostPort: guestPort: {
-    from = "host";
-    host.address = host.listenAddress;
-    host.port = hostPort;
-    guest.port = guestPort;
-    proto = "tcp";
-  };
+  inherit (homelab) mediaVm ports;
 in {
   microvm = {
     hypervisor = "qemu";
@@ -15,9 +8,9 @@ in {
     mem = mediaVm.memory;
     interfaces = [
       {
-        id = "media0";
+        id = "vm-media0";
         mac = "02:00:00:00:20:01";
-        type = "user";
+        type = "tap";
       }
     ];
 
@@ -39,20 +32,6 @@ in {
         fsType = mediaVm.stateVolume.fsType;
         label = mediaVm.stateVolume.label;
       }
-    ];
-
-    forwardPorts = lib.zipListsWith mkMediaForward [
-      ports.media.host.jellyfin
-      ports.media.host.qbittorrent
-      ports.media.host.radarr
-      ports.media.host.sonarr
-      ports.media.host.prowlarr
-    ] [
-      ports.media.guest.jellyfin
-      ports.media.guest.qbittorrent
-      ports.media.guest.radarr
-      ports.media.guest.sonarr
-      ports.media.guest.prowlarr
     ];
   };
 

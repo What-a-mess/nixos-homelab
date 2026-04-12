@@ -32,10 +32,14 @@ These checks confirm that the three service-group VMs started correctly.
 Run:
 
 ```bash
-curl -I http://127.0.0.1:11200
+ping -c 1 192.168.31.211
+ping -c 1 192.168.31.212
+ping -c 1 192.168.31.213
+curl -I http://192.168.31.213:1200
 ```
 
-If RSSHub is fully configured, this should return an HTTP response.
+If the bridge and guest addressing are correct, the three pings should succeed.
+If RSSHub is fully configured, the HTTP probe should return a response from `app-vm`.
 If it does not, distinguish between two bootstrap states:
 
 - The secret is not enrolled yet, so the service is still waiting on its encrypted payload
@@ -48,6 +52,7 @@ During early bootstrap, some conditions are expected:
 - `app-vm` may be running even if RSSHub is not yet usable
 - RSSHub may remain inactive if its secret has not been enrolled yet
 - RSSHub may also remain inactive if the secret flow is not fully wired yet
+- The VMs should still retain their fixed LAN addresses even when an application inside them is inactive
 - Secret-gated service inactivity should be interpreted in the context of bootstrap state, not automatically as a host installation failure
 
 ## If A VM Fails To Start

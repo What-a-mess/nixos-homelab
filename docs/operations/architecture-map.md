@@ -30,8 +30,8 @@ The host is responsible for:
 - Booting the physical machine
 - Mounting `/srv/data`
 - Running the MicroVM host substrate
-- Managing host networking and forwarded service ports
-- Providing host network management through `NetworkManager` and `nmcli`
+- Managing host networking, the LAN bridge, and guest tap attachment
+- Providing declarative bridge networking while keeping `NetworkManager` and `nmcli` available for inspection and ad-hoc management outside the bridged uplink
 - Defining the current secret-handling boundary, including the encrypted secret flow as it is being established
 
 ## Storage VM
@@ -56,7 +56,7 @@ The media VM is responsible for:
 
 - Running the media application stack
 - Keeping media-related runtime state private to the VM
-- Using host-managed port forwarding for exposed media services
+- Exposing media services directly on its fixed LAN address
 
 ## App VM
 

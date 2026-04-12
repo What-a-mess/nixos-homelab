@@ -1,13 +1,6 @@
-{ homelab, lib, ... }:
+{ homelab, ... }:
 let
-  inherit (homelab) host ports storage storageVm;
-  mkForward = proto: hostPort: guestPort: {
-    from = "host";
-    host.address = host.listenAddress;
-    host.port = hostPort;
-    guest.port = guestPort;
-    inherit proto;
-  };
+  inherit (homelab) ports storage storageVm;
 in {
   microvm = {
     hypervisor = "qemu";
@@ -15,9 +8,9 @@ in {
     mem = storageVm.memory;
     interfaces = [
       {
-        id = "storage0";
+        id = "vm-storage0";
         mac = "02:00:00:00:10:01";
-        type = "user";
+        type = "tap";
       }
     ];
 
@@ -30,11 +23,6 @@ in {
         securityModel = "none";
       }
     ];
-
-    forwardPorts =
-      (lib.zipListsWith (mkForward "tcp") ports.storage.host.smb ports.storage.guest.smb)
-      ++ (lib.zipListsWith (mkForward "tcp") ports.storage.host.nfsTcp ports.storage.guest.nfsTcp)
-      ++ (lib.zipListsWith (mkForward "udp") ports.storage.host.nfsUdp ports.storage.guest.nfsUdp);
   };
 
   networking.firewall = {
