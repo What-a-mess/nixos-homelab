@@ -32,7 +32,7 @@ These checks confirm that the three service-group VMs started correctly.
 Run:
 
 ```bash
-curl -I http://127.0.0.1:1200
+curl -I http://127.0.0.1:11200
 ```
 
 If RSSHub is fully configured, this should return an HTTP response.

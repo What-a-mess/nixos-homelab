@@ -18,7 +18,7 @@ in {
       environment = {
         NODE_ENV = "production";
         TZ = homelab.timeZone;
-        PORT = toString ports.app.rsshub;
+        PORT = toString ports.app.guest.rsshub;
         CACHE_EXPIRE = "3600";
       };
       volumes = [

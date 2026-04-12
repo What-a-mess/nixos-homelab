@@ -8,6 +8,7 @@
     ../../modules/host/power.nix
     ../../modules/host/storage.nix
     ../../modules/host/networking.nix
+    ../../modules/host/vscode.nix
     ../../modules/host/microvm-host.nix
     ../../modules/host/secrets.nix
   ];

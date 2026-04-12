@@ -90,21 +90,45 @@
 
   ports = {
     storage = {
-      smb = [ 139 445 ];
-      nfsTcp = [ 111 2049 20048 32765 32766 ];
-      nfsUdp = [ 111 2049 20048 32765 32766 ];
+      guest = {
+        smb = [ 139 445 ];
+        nfsTcp = [ 111 2049 20048 32765 32766 ];
+        nfsUdp = [ 111 2049 20048 32765 32766 ];
+      };
+
+      host = {
+        smb = [ 30139 30445 ];
+        nfsTcp = [ 30111 32049 32048 32765 32766 ];
+        nfsUdp = [ 30111 32049 32048 32765 32766 ];
+      };
     };
 
     media = {
-      jellyfin = 8096;
-      qbittorrent = 8080;
-      sonarr = 8989;
-      radarr = 7878;
-      prowlarr = 9696;
+      guest = {
+        jellyfin = 8096;
+        qbittorrent = 8080;
+        sonarr = 8989;
+        radarr = 7878;
+        prowlarr = 9696;
+      };
+
+      host = {
+        jellyfin = 18096;
+        qbittorrent = 18080;
+        sonarr = 18989;
+        radarr = 17878;
+        prowlarr = 19696;
+      };
     };
 
     app = {
-      rsshub = 1200;
+      guest = {
+        rsshub = 1200;
+      };
+
+      host = {
+        rsshub = 11200;
+      };
     };
   };
 

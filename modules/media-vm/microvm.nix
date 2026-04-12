@@ -1,11 +1,11 @@
 { homelab, ... }:
 let
   inherit (homelab) host mediaVm ports;
-  mkMediaForward = port: {
+  mkMediaForward = hostPort: guestPort: {
     from = "host";
     host.address = host.listenAddress;
-    host.port = port;
-    guest.port = port;
+    host.port = hostPort;
+    guest.port = guestPort;
     proto = "tcp";
   };
 in {
@@ -41,23 +41,29 @@ in {
       }
     ];
 
-    forwardPorts = map mkMediaForward [
-      ports.media.jellyfin
-      ports.media.qbittorrent
-      ports.media.radarr
-      ports.media.sonarr
-      ports.media.prowlarr
+    forwardPorts = builtins.zipListsWith mkMediaForward [
+      ports.media.host.jellyfin
+      ports.media.host.qbittorrent
+      ports.media.host.radarr
+      ports.media.host.sonarr
+      ports.media.host.prowlarr
+    ] [
+      ports.media.guest.jellyfin
+      ports.media.guest.qbittorrent
+      ports.media.guest.radarr
+      ports.media.guest.sonarr
+      ports.media.guest.prowlarr
     ];
   };
 
   networking.firewall = {
     enable = true;
     allowedTCPPorts = [
-      ports.media.jellyfin
-      ports.media.qbittorrent
-      ports.media.radarr
-      ports.media.sonarr
-      ports.media.prowlarr
+      ports.media.guest.jellyfin
+      ports.media.guest.qbittorrent
+      ports.media.guest.radarr
+      ports.media.guest.sonarr
+      ports.media.guest.prowlarr
     ];
   };
 }

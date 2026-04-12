@@ -9,17 +9,17 @@ in {
   networking.firewall = {
     enable = true;
     allowedTCPPorts =
-      ports.storage.smb
-      ++ ports.storage.nfsTcp
+      ports.storage.host.smb
+      ++ ports.storage.host.nfsTcp
       ++ [
-        ports.app.rsshub
-        ports.media.jellyfin
-        ports.media.qbittorrent
-        ports.media.radarr
-        ports.media.sonarr
-        ports.media.prowlarr
+        ports.app.host.rsshub
+        ports.media.host.jellyfin
+        ports.media.host.qbittorrent
+        ports.media.host.radarr
+        ports.media.host.sonarr
+        ports.media.host.prowlarr
       ];
-    allowedUDPPorts = ports.storage.nfsUdp;
+    allowedUDPPorts = ports.storage.host.nfsUdp;
   };
 
   environment.systemPackages = with pkgs; [

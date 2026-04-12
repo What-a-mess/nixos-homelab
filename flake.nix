@@ -7,9 +7,11 @@
     microvm.inputs.nixpkgs.follows = "nixpkgs";
     agenix.url = "github:ryantm/agenix";
     agenix.inputs.nixpkgs.follows = "nixpkgs";
+    vscode-server.url = "github:nix-community/nixos-vscode-server";
+    vscode-server.inputs.nixpkgs.follows = "nixpkgs";
   };
 
-  outputs = inputs@{ self, nixpkgs, microvm, agenix, ... }:
+  outputs = inputs@{ self, nixpkgs, microvm, agenix, vscode-server, ... }:
     let
       system = "x86_64-linux";
       homelab = import ./lib/homelab-config.nix;
@@ -20,6 +22,7 @@
           specialArgs = {
             inherit self homelab;
             microvmModules = microvm.nixosModules;
+            inherit vscode-server;
           };
         };
     in {

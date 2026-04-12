@@ -28,8 +28,8 @@ in {
       {
         from = "host";
         host.address = host.listenAddress;
-        host.port = ports.app.rsshub;
-        guest.port = ports.app.rsshub;
+        host.port = ports.app.host.rsshub;
+        guest.port = ports.app.guest.rsshub;
         proto = "tcp";
       }
     ];
@@ -37,6 +37,6 @@ in {
 
   networking.firewall = {
     enable = true;
-    allowedTCPPorts = [ ports.app.rsshub ];
+    allowedTCPPorts = [ ports.app.guest.rsshub ];
   };
 }

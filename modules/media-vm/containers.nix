@@ -35,7 +35,7 @@ in {
         PUID = toString mediaUid;
         PGID = toString mediaGid;
         TZ = homelab.timeZone;
-        WEBUI_PORT = toString ports.media.qbittorrent;
+        WEBUI_PORT = toString ports.media.guest.qbittorrent;
       };
       volumes = [
         "${stateRoot}/qbittorrent:/config:rw"
