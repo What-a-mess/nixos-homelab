@@ -23,6 +23,9 @@ in {
   };
 
   environment.systemPackages = with pkgs; [
+    git
+    git-lfs
+    delta
     networkmanager
     iw
     wirelesstools
