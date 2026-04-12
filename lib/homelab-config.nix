@@ -78,6 +78,7 @@
     memory = 2048;
     vcpu = 2;
     hostSecretsPath = "/run/app-vm-secrets";
+    guestSecretsPath = "/run/host-secrets";
     stateVolume = {
       image = "/srv/data/vmstate/app-vm-state.img";
       mountPoint = "/var/lib/app-services";

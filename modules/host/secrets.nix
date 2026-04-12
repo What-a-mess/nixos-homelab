@@ -4,6 +4,13 @@ let
   rsshubSecret = config.age.secrets.rsshub-env.path;
 in {
   age.identityPaths = [ "/etc/ssh/ssh_host_ed25519_key" ];
+  age.secrets.rsshub-env = {
+    file = ../../secrets/rsshub.env.age;
+    path = "/run/agenix/rsshub.env";
+    mode = "0640";
+    owner = "root";
+    group = "root";
+  };
 
   imports = [
     ../../secrets/secrets.nix

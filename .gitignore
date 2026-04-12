@@ -1,5 +1,8 @@
 .direnv/
 .envrc
+*.env
+*.secret
+secrets/*.local
 result
 result-*
 
