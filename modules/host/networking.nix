@@ -1,8 +1,9 @@
-{ homelab, ... }:
+{ homelab, pkgs, ... }:
 let
   inherit (homelab) host ports;
 in {
   networking.hostName = host.hostName;
+  networking.networkmanager.enable = true;
   time.timeZone = homelab.timeZone;
 
   networking.firewall = {
@@ -20,4 +21,10 @@ in {
       ];
     allowedUDPPorts = ports.storage.nfsUdp;
   };
+
+  environment.systemPackages = with pkgs; [
+    networkmanager
+    iw
+    wirelesstools
+  ];
 }

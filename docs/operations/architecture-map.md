@@ -31,6 +31,7 @@ The host is responsible for:
 - Mounting `/srv/data`
 - Running the MicroVM host substrate
 - Managing host networking and forwarded service ports
+- Providing host network management through `NetworkManager` and `nmcli`
 - Defining the current secret-handling boundary, including the encrypted secret flow as it is being established
 
 ## Storage VM

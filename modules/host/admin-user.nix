@@ -5,6 +5,9 @@ in {
   users.users.${adminUser} = {
     isNormalUser = true;
     description = "Homelab administrator";
-    extraGroups = [ "wheel" ];
+    extraGroups = [
+      "wheel"
+      "networkmanager"
+    ];
   };
 }
