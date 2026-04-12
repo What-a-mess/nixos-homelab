@@ -12,10 +12,6 @@ in {
     group = "root";
   };
 
-  imports = [
-    ../../secrets/secrets.nix
-  ];
-
   systemd.tmpfiles.rules = [
     "d ${appSecretsHostPath} 0750 root root - -"
   ];
