@@ -1,4 +1,4 @@
-{ homelab, ... }:
+{ homelab, lib, ... }:
 let
   inherit (homelab) host ports storage storageVm;
   mkForward = proto: hostPort: guestPort: {
@@ -32,9 +32,9 @@ in {
     ];
 
     forwardPorts =
-      (builtins.zipListsWith (mkForward "tcp") ports.storage.host.smb ports.storage.guest.smb)
-      ++ (builtins.zipListsWith (mkForward "tcp") ports.storage.host.nfsTcp ports.storage.guest.nfsTcp)
-      ++ (builtins.zipListsWith (mkForward "udp") ports.storage.host.nfsUdp ports.storage.guest.nfsUdp);
+      (lib.zipListsWith (mkForward "tcp") ports.storage.host.smb ports.storage.guest.smb)
+      ++ (lib.zipListsWith (mkForward "tcp") ports.storage.host.nfsTcp ports.storage.guest.nfsTcp)
+      ++ (lib.zipListsWith (mkForward "udp") ports.storage.host.nfsUdp ports.storage.guest.nfsUdp);
   };
 
   networking.firewall = {

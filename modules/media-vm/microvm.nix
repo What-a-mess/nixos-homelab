@@ -1,4 +1,4 @@
-{ homelab, ... }:
+{ homelab, lib, ... }:
 let
   inherit (homelab) host mediaVm ports;
   mkMediaForward = hostPort: guestPort: {
@@ -41,7 +41,7 @@ in {
       }
     ];
 
-    forwardPorts = builtins.zipListsWith mkMediaForward [
+    forwardPorts = lib.zipListsWith mkMediaForward [
       ports.media.host.jellyfin
       ports.media.host.qbittorrent
       ports.media.host.radarr
