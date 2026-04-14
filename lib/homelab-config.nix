@@ -37,6 +37,8 @@
       "/srv/data/shares"
       "/srv/data/shares/private"
       "/srv/data/shares/public"
+      "/srv/data/router"
+      "/srv/data/router/mihomo"
       "/srv/data/vmstate"
     ];
   };
