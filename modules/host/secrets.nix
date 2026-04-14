@@ -13,6 +13,10 @@ let
     else
       null;
 in {
+  imports = [
+    ./edge/secrets.nix
+  ];
+
   age.identityPaths = [ "/etc/ssh/ssh_host_ed25519_key" ];
 
   age.secrets = lib.mkMerge [
