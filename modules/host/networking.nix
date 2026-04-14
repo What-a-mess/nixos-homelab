@@ -21,7 +21,10 @@ in {
       inherit address prefixLength;
     }
   ];
-  networking.defaultGateway = gateway;
+  networking.defaultGateway = {
+    address = gateway;
+    interface = bridgeInterface;
+  };
   networking.nameservers = dns;
 
   systemd.network.enable = true;
