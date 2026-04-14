@@ -22,6 +22,10 @@
     app-vm = {
       flake = self;
     };
+
+    router-vm = {
+      flake = self;
+    };
   };
 
   system.stateVersion = homelab.stateVersion;
