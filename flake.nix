@@ -46,6 +46,11 @@
           microvm.nixosModules.microvm
           ./vms/app-vm.nix
         ];
+
+        router-vm = mkSystem [
+          microvm.nixosModules.microvm
+          ./vms/router-vm.nix
+        ];
       };
     };
 }
