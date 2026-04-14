@@ -22,16 +22,30 @@ let
       privateSharePath = "${storage.root}/shares/private";
       vmStatePath = "${storage.root}/vmstate";
       mode =
-        if path == storage.root || path == vmStatePath then
+        if path == storage.root then
           "0755"
+        else if path == vmStatePath then
+          "0775"
         else if path == privateSharePath then
           "2770"
         else if builtins.elem path groupWritablePaths then
           "2775"
         else
           "0755";
-      owner = if mode == "0755" then "root" else toString mediaUid;
-      group = if mode == "0755" then "root" else toString mediaGid;
+      owner =
+        if path == vmStatePath then
+          "microvm"
+        else if mode == "0755" then
+          "root"
+        else
+          toString mediaUid;
+      group =
+        if path == vmStatePath then
+          "kvm"
+        else if mode == "0755" then
+          "root"
+        else
+          toString mediaGid;
     in
     "d ${path} ${mode} ${owner} ${group} - -";
 in {
