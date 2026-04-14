@@ -66,4 +66,5 @@ Inspect:
 journalctl -u microvm@storage-vm -b
 journalctl -u microvm@media-vm -b
 journalctl -u microvm@app-vm -b
+journalctl -u microvm@router-vm -b
 ```
