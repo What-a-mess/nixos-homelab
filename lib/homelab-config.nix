@@ -168,4 +168,44 @@
     radarr = "lscr.io/linuxserver/radarr:latest";
     sonarr = "lscr.io/linuxserver/sonarr:latest";
   };
+
+  edge = {
+    manageApex = false;
+    services = {
+      rsshub = {
+        backendHost = "192.168.31.213";
+        backendPort = 1200;
+      };
+
+      jellyfin = {
+        backendHost = "192.168.31.212";
+        backendPort = 8096;
+      };
+
+      sonarr = {
+        backendHost = "192.168.31.212";
+        backendPort = 8989;
+      };
+
+      radarr = {
+        backendHost = "192.168.31.212";
+        backendPort = 7878;
+      };
+
+      prowlarr = {
+        backendHost = "192.168.31.212";
+        backendPort = 9696;
+      };
+
+      qbittorrent = {
+        backendHost = "192.168.31.212";
+        backendPort = 8080;
+      };
+
+      router = {
+        backendHost = "192.168.31.214";
+        backendPort = 9090;
+      };
+    };
+  };
 }
