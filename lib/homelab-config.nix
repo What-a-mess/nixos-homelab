@@ -99,6 +99,21 @@
     };
   };
 
+  routerVm = {
+    memory = 2048;
+    vcpu = 2;
+    address = "192.168.31.214";
+    configHostPath = "/srv/data/router/mihomo";
+    configGuestPath = "/var/lib/router-vm/mihomo-config";
+    stateVolume = {
+      image = "/srv/data/vmstate/router-vm-state.img";
+      mountPoint = "/var/lib/router-vm";
+      size = 8192;
+      fsType = "ext4";
+      label = "router-vm-state";
+    };
+  };
+
   ports = {
     storage = {
       guest = {
