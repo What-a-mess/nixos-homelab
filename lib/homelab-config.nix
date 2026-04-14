@@ -102,7 +102,7 @@
   };
 
   routerVm = {
-    memory = 2048;
+    memory = 1536;
     vcpu = 2;
     address = "192.168.31.214";
     configHostPath = "/srv/data/router/mihomo";
