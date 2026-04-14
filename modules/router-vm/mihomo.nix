@@ -15,7 +15,6 @@ in {
     unitConfig.ConditionPathExists = lib.mkForce configFile;
     serviceConfig = {
       WorkingDirectory = "${stateRoot}/mihomo";
-      StateDirectory = lib.mkForce "";
     };
   };
 }

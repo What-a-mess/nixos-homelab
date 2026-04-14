@@ -3,6 +3,37 @@ let
   inherit (homelab) storage users;
   mediaUid = users.media.uid;
   mediaGid = users.media.gid;
+  mkStorageRule =
+    path:
+    let
+      groupWritablePaths = [
+        "${storage.root}/backups"
+        "${storage.root}/downloads"
+        "${storage.root}/downloads/complete"
+        "${storage.root}/downloads/incomplete"
+        "${storage.root}/inbox"
+        "${storage.root}/media"
+        "${storage.root}/media/movies"
+        "${storage.root}/media/music"
+        "${storage.root}/media/tv"
+        "${storage.root}/shares"
+        "${storage.root}/shares/public"
+      ];
+      privateSharePath = "${storage.root}/shares/private";
+      vmStatePath = "${storage.root}/vmstate";
+      mode =
+        if path == storage.root || path == vmStatePath then
+          "0755"
+        else if path == privateSharePath then
+          "2770"
+        else if builtins.elem path groupWritablePaths then
+          "2775"
+        else
+          "0755";
+      owner = if mode == "0755" then "root" else toString mediaUid;
+      group = if mode == "0755" then "root" else toString mediaGid;
+    in
+    "d ${path} ${mode} ${owner} ${group} - -";
 in {
   fileSystems."/srv/data" = {
     device = lib.mkDefault storage.disk.device;
@@ -10,20 +41,5 @@ in {
     neededForBoot = lib.mkDefault false;
   };
 
-  systemd.tmpfiles.rules = [
-    "d ${storage.root} 0755 root root - -"
-    "d ${storage.root}/backups 2775 ${toString mediaUid} ${toString mediaGid} - -"
-    "d ${storage.root}/downloads 2775 ${toString mediaUid} ${toString mediaGid} - -"
-    "d ${storage.root}/downloads/complete 2775 ${toString mediaUid} ${toString mediaGid} - -"
-    "d ${storage.root}/downloads/incomplete 2775 ${toString mediaUid} ${toString mediaGid} - -"
-    "d ${storage.root}/inbox 2775 ${toString mediaUid} ${toString mediaGid} - -"
-    "d ${storage.root}/media 2775 ${toString mediaUid} ${toString mediaGid} - -"
-    "d ${storage.root}/media/movies 2775 ${toString mediaUid} ${toString mediaGid} - -"
-    "d ${storage.root}/media/music 2775 ${toString mediaUid} ${toString mediaGid} - -"
-    "d ${storage.root}/media/tv 2775 ${toString mediaUid} ${toString mediaGid} - -"
-    "d ${storage.root}/shares 2775 ${toString mediaUid} ${toString mediaGid} - -"
-    "d ${storage.root}/shares/private 2770 ${toString mediaUid} ${toString mediaGid} - -"
-    "d ${storage.root}/shares/public 2775 ${toString mediaUid} ${toString mediaGid} - -"
-    "d ${storage.root}/vmstate 0755 root root - -"
-  ];
+  systemd.tmpfiles.rules = map mkStorageRule ([ storage.root ] ++ storage.directories);
 }
