@@ -36,3 +36,13 @@ The media stack owns media-facing application services such as Jellyfin and the 
 - Shared ports and host storage values: [`lib/homelab-config.nix`](../../lib/homelab-config.nix)
 
 The storage VM owns network file-sharing protocols and access to the shared data root.
+
+## Router Node
+
+- Boundary: `router-vm`
+- LAN address: `192.168.31.214`
+- VM entrypoint: [`vms/router-vm.nix`](../../vms/router-vm.nix)
+- Runtime modules: [`modules/router-vm/mihomo.nix`](../../modules/router-vm/mihomo.nix), [`modules/router-vm/networking.nix`](../../modules/router-vm/networking.nix), [`modules/router-vm/microvm.nix`](../../modules/router-vm/microvm.nix), and [`modules/router-vm/identity.nix`](../../modules/router-vm/identity.nix)
+- Local config source: `/srv/data/router/mihomo`
+
+The router VM owns route-node and ordinary proxy behavior for opted-in clients.

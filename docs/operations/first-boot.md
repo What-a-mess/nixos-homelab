@@ -23,9 +23,10 @@ Run:
 systemctl status microvm@storage-vm
 systemctl status microvm@media-vm
 systemctl status microvm@app-vm
+systemctl status microvm@router-vm
 ```
 
-These checks confirm that the three service-group VMs started correctly.
+These checks confirm that the service-group VMs started correctly.
 
 ## Service Reachability
 
@@ -35,10 +36,11 @@ Run:
 ping -c 1 192.168.31.211
 ping -c 1 192.168.31.212
 ping -c 1 192.168.31.213
+ping -c 1 192.168.31.214
 curl -I http://192.168.31.213:1200
 ```
 
-If the bridge and guest addressing are correct, the three pings should succeed.
+If the bridge and guest addressing are correct, the pings should succeed.
 If RSSHub is fully configured, the HTTP probe should return a response from `app-vm`.
 If it does not, distinguish between two bootstrap states:
 
@@ -52,6 +54,7 @@ During early bootstrap, some conditions are expected:
 - `app-vm` may be running even if RSSHub is not yet usable
 - RSSHub may remain inactive if its secret has not been enrolled yet
 - RSSHub may also remain inactive if the secret flow is not fully wired yet
+- `router-vm` may be running even if `mihomo` is inactive because `/srv/data/router/mihomo/config.yaml` has not been created yet
 - The VMs should still retain their fixed LAN addresses even when an application inside them is inactive
 - Secret-gated service inactivity should be interpreted in the context of bootstrap state, not automatically as a host installation failure
 

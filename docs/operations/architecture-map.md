@@ -70,6 +70,18 @@ The app VM is responsible for:
 - Hosting RSSHub as the first app-tier workload
 - Keeping application runtime state private to the VM
 
+## Router VM
+
+The router VM entrypoint is [`vms/router-vm.nix`](../../vms/router-vm.nix).
+
+Its implementation modules live under [`modules/router-vm/`](../../modules/router-vm).
+
+The router VM is responsible for:
+
+- Running the LAN route-node and proxy-core workload
+- Hosting `mihomo` as a dedicated network-function service
+- Mounting host-local proxy config into the VM
+
 ## Shared Configuration
 
 Shared constants are defined in [`lib/homelab-config.nix`](../../lib/homelab-config.nix).
