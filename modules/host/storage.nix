@@ -9,6 +9,7 @@ let
       [
         config.homelab.edge.paths.root
         config.homelab.edge.paths.caddyConfigDir
+        "${config.homelab.edge.paths.root}/pki"
         config.homelab.edge.paths.serverPkiDir
         config.homelab.edge.paths.clientCaDir
         config.homelab.edge.paths.clientBundlesDir
