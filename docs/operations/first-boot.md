@@ -47,6 +47,20 @@ If it does not, distinguish between two bootstrap states:
 - The secret is not enrolled yet, so the service is still waiting on its encrypted payload
 - The secret flow is not fully wired yet, so the host can boot but RSSHub still cannot become healthy
 
+## Public Ingress
+
+The host public ingress is Caddy-based and requires PKI material under `/srv/data/edge/`.
+
+During first boot, remember:
+
+- All currently public sites require mTLS.
+- If the PKI files are missing, public ingress is unavailable by design.
+- A running host does not mean public ingress is live until Caddy has valid server and client-CA inputs.
+
+Use the edge guide for ingress-specific checks:
+
+- [`docs/operations/edge-caddy.md`](./edge-caddy.md)
+
 ## Expected Bootstrap-Safe States
 
 During early bootstrap, some conditions are expected:
@@ -57,6 +71,7 @@ During early bootstrap, some conditions are expected:
 - `router-vm` may be running even if `mihomo` is inactive because `/srv/data/router/mihomo/config.yaml` has not been created yet
 - The VMs should still retain their fixed LAN addresses even when an application inside them is inactive
 - Secret-gated service inactivity should be interpreted in the context of bootstrap state, not automatically as a host installation failure
+- Public ingress can remain intentionally unavailable until the edge PKI is provisioned
 
 ## If A VM Fails To Start
 

@@ -2,6 +2,16 @@
 
 This document answers the question: where is this service configured?
 
+## Host Public Ingress
+
+- Boundary: host
+- Public ingress: Caddy with mTLS
+- Configuration: [`modules/host/edge/caddy.nix`](../../modules/host/edge/caddy.nix)
+- PKI layout: [`docs/operations/edge-caddy.md`](./edge-caddy.md)
+- Shared edge topology: [`lib/homelab-config.nix`](../../lib/homelab-config.nix)
+
+The host public ingress is the only public TLS entry point and should be treated as the operator-facing boundary for all currently exposed sites.
+
 ## RSSHub
 
 - Boundary: `app-vm`
