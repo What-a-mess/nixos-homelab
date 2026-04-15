@@ -5,7 +5,6 @@
 secrets/*.local
 result
 result-*
-hosts/homelab/edge-local.nix
 
 # Local Codex workspace metadata
 .codex/
