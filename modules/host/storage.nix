@@ -1,8 +1,20 @@
-{ homelab, lib, ... }:
+{ homelab, lib, config, ... }:
 let
   inherit (homelab) storage users;
   mediaUid = users.media.uid;
   mediaGid = users.media.gid;
+  hasEdgePaths = lib.hasAttrByPath [ "homelab" "edge" "paths" ] config;
+  edgeDirectories =
+    if hasEdgePaths then
+      [
+        config.homelab.edge.paths.root
+        config.homelab.edge.paths.caddyConfigDir
+        config.homelab.edge.paths.serverPkiDir
+        config.homelab.edge.paths.clientCaDir
+        config.homelab.edge.paths.clientBundlesDir
+      ]
+    else
+      [ ];
   mkStorageRule =
     path:
     let
@@ -55,5 +67,5 @@ in {
     neededForBoot = lib.mkDefault false;
   };
 
-  systemd.tmpfiles.rules = map mkStorageRule ([ storage.root ] ++ storage.directories);
+  systemd.tmpfiles.rules = map mkStorageRule ([ storage.root ] ++ storage.directories ++ edgeDirectories);
 }
