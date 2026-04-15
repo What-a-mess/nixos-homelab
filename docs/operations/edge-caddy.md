@@ -74,6 +74,7 @@ Use the edge port and hostnames from the plan when validating public ingress:
 
 ```bash
 systemctl status caddy.service edge-ddns.service edge-ddns.timer
+journalctl -u caddy.service -b
 ss -ltnp | rg <edge-port>
 curl -vk --resolve <host>:<port>:[<public-ipv6>] https://<host>:<port>/
 openssl s_client -connect [<public-ipv6>]:<port> -servername <host> -cert <client.pem> -key <client.key>
@@ -84,4 +85,3 @@ Expected results:
 - `ss` shows Caddy listening on the edge port.
 - `curl` succeeds only when the request has the right hostname and a valid client certificate.
 - `openssl s_client` completes the TLS handshake when the client certificate is accepted.
-
