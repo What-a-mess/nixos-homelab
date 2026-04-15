@@ -76,7 +76,7 @@ Use the edge port and hostnames from the plan when validating public ingress:
 systemctl status caddy.service edge-ddns.service edge-ddns.timer
 journalctl -u caddy.service -b
 ss -ltnp | rg <edge-port>
-curl -vk --resolve <host>:<port>:[<public-ipv6>] https://<host>:<port>/
+curl -vk --resolve <host>:<port>:[<public-ipv6>] --cert <client.pem> --key <client.key> https://<host>:<port>/
 openssl s_client -connect [<public-ipv6>]:<port> -servername <host> -cert <client.pem> -key <client.key>
 ```
 
