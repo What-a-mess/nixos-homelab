@@ -7,7 +7,7 @@ This guide covers the host public ingress layer built around Caddy and mTLS.
 - Caddy is the host-facing TLS terminator and reverse proxy.
 - It routes public hostnames to the VM backends defined in `lib/homelab-config.nix`.
 - It enforces mTLS for all currently public sites.
-- DDNS still publishes the host address; Caddy handles request admission.
+- DDNS is scaffolded to publish the host address; Caddy handles request admission.
 - If the PKI files are missing, public ingress is unavailable by design.
 
 ## Host-Local PKI Layout
@@ -76,6 +76,7 @@ Use the edge port and hostnames from the plan when validating public ingress:
 systemctl status caddy.service edge-ddns.service edge-ddns.timer
 journalctl -u caddy.service -b
 ss -ltnp | rg <edge-port>
+curl -vk --resolve <host>:<port>:[<public-ipv6>] https://<host>:<port>/
 curl -vk --resolve <host>:<port>:[<public-ipv6>] --cert <client.pem> --key <client.key> https://<host>:<port>/
 openssl s_client -connect [<public-ipv6>]:<port> -servername <host> -cert <client.pem> -key <client.key>
 ```
@@ -83,5 +84,6 @@ openssl s_client -connect [<public-ipv6>]:<port> -servername <host> -cert <clien
 Expected results:
 
 - `ss` shows Caddy listening on the edge port.
-- `curl` succeeds only when the request has the right hostname and a valid client certificate.
+- The unauthenticated `curl` request fails the mTLS check.
+- The authenticated `curl` request succeeds only when the request has the right hostname and a valid client certificate.
 - `openssl s_client` completes the TLS handshake when the client certificate is accepted.
