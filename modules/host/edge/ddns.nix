@@ -50,8 +50,8 @@ lib.mkIf edgeDdnsEnabled {
     wantedBy = [ "timers.target" ];
 
     timerConfig = {
-      OnBootSec = "5m";
-      OnUnitActiveSec = "15m";
+      OnBootSec = "3m";
+      OnUnitActiveSec = "10m";
       Persistent = true;
       RandomizedDelaySec = "1m";
       Unit = "edge-ddns.service";
