@@ -75,6 +75,7 @@ in
   systemd.services.caddy = {
     after = [ "edge-caddyfile.service" ];
     requires = [ "edge-caddyfile.service" ];
+    restartTriggers = [ generatedCaddyfile ];
     unitConfig.ConditionPathExists = [
       paths.caddyfile
       serverCert

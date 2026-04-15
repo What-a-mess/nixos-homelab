@@ -1,11 +1,7 @@
 {
-  homelab.edge.public = {
+  homelab.edge = {
     domain = "example.com";
-    httpsPort = 443;
-    acmeEmail = "admin@example.com";
-    hostnames = {
-      # app = "app";
-      # api = "api";
-    };
+    port = 28443;
+    manageApex = false;
   };
 }
