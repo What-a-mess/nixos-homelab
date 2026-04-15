@@ -5,6 +5,7 @@ let
   serverCert = "${paths.serverPkiDir}/fullchain.pem";
   serverKey = "${paths.serverPkiDir}/privkey.pem";
   clientCa = "${paths.clientCaDir}/ca.pem";
+  requiresClientCa = lib.any (service: service.requireMtls) (lib.attrValues edge.services);
 
   renderServiceBlock = _: service:
     let
@@ -66,7 +67,7 @@ in
     path = [ pkgs.coreutils ];
 
     script = ''
-      install -d -m 0750 ${paths.caddyConfigDir}
+      install -d -m 0750 -g caddy ${paths.caddyConfigDir}
       install -m 0640 -g caddy ${generatedCaddyfile} ${paths.caddyfile}
     '';
   };
@@ -78,8 +79,7 @@ in
       paths.caddyfile
       serverCert
       serverKey
-      clientCa
-    ];
+    ] ++ lib.optional requiresClientCa clientCa;
     serviceConfig = {
       SupplementaryGroups = [ "caddy" ];
     };
