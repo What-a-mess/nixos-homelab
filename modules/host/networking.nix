@@ -36,7 +36,7 @@ in {
 
   networking.firewall = {
     enable = true;
-    allowedTCPPorts = [ 22 ];
+    allowedTCPPorts = [ 22 homelab.edge.port ];
   };
 
   environment.systemPackages = with pkgs; [
