@@ -1,4 +1,7 @@
-{ homelab, ... }:
+{ lib, ... }:
+let
+  edgeLocal = ./edge-local.nix;
+in
 {
   imports = [
     ./hardware-configuration.nix
@@ -12,5 +15,6 @@
     ../../modules/host/microvm-host.nix
     ../../modules/host/secrets.nix
     ../../modules/host/edge/default.nix
-  ];
+  ]
+  ++ lib.optionals (builtins.pathExists edgeLocal) [ edgeLocal ];
 }
