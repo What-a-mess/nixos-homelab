@@ -7,8 +7,32 @@ This guide covers the host public ingress layer built around Caddy and mTLS.
 - Caddy is the host-facing TLS terminator and reverse proxy.
 - It routes public hostnames to the VM backends defined in `lib/homelab-config.nix`.
 - It enforces mTLS for all currently public sites.
-- DDNS is scaffolded to publish the host address; Caddy handles request admission.
+- DDNS updates the Alibaba Cloud wildcard `AAAA` record for the configured edge domain.
 - If the PKI files are missing, public ingress is unavailable by design.
+
+## Domain And DDNS Inputs
+
+The host-local edge domain settings live in `hosts/homelab/edge-local.nix`:
+
+- `homelab.edge.domain`
+- `homelab.edge.port`
+- `homelab.edge.manageApex`
+
+Current service hostnames come from `lib/homelab-config.nix` and resolve under the configured domain, for example:
+
+- `rsshub.<domain>`
+- `jellyfin.<domain>`
+- `router.<domain>`
+
+DDNS uses the encrypted `edge-aliyun.env.age` secret on the host. The decrypted env file must provide Alibaba Cloud DNS credentials as either:
+
+- `ALICLOUD_ACCESS_KEY_ID` and `ALICLOUD_ACCESS_KEY_SECRET`
+- or the legacy aliases `ALICLOUD_ACCESS_KEY` and `ALICLOUD_SECRET_KEY`
+
+The DDNS service updates:
+
+- `*.<domain>` `AAAA`
+- optionally `<domain>` `AAAA` when `homelab.edge.manageApex = true`
 
 ## Host-Local PKI Layout
 
@@ -21,13 +45,10 @@ The host PKI lives under `/srv/data/edge/`:
 
 ## Server Certificate Files
 
-Caddy expects the server-side TLS files to be present under the server PKI directory and readable by the service:
+Caddy expects these server-side TLS files:
 
-- server certificate
-- server private key
-- any chain or fullchain material required by the generated Caddy config
-
-The exact filenames are intentionally host-local and should stay aligned with the edge module and the generated Caddyfile.
+- `/srv/data/edge/pki/server/fullchain.pem`
+- `/srv/data/edge/pki/server/privkey.pem`
 
 ## Client CA And Device Certificates
 
@@ -74,6 +95,7 @@ Use the edge port and hostnames from the plan when validating public ingress:
 
 ```bash
 systemctl status caddy.service edge-ddns.service edge-ddns.timer
+journalctl -u edge-ddns.service -b
 journalctl -u caddy.service -b
 ss -ltnp | rg <edge-port>
 curl -vk --resolve <host>:<port>:[<public-ipv6>] https://<host>:<port>/
@@ -84,6 +106,7 @@ openssl s_client -connect [<public-ipv6>]:<port> -servername <host> -cert <clien
 Expected results:
 
 - `ss` shows Caddy listening on the edge port.
+- `edge-ddns.service` reports either a record create, a record update, or a no-op when the wildcard `AAAA` already matches the current public IPv6.
 - The unauthenticated `curl` request fails the mTLS check.
 - The authenticated `curl` request succeeds only when the request has the right hostname and a valid client certificate.
 - `openssl s_client` completes the TLS handshake when the client certificate is accepted.
