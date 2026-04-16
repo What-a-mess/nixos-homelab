@@ -1,6 +1,7 @@
 { ... }:
 {
   imports = [
+    ./options.nix
     ./secrets.nix
     ./ddns.nix
     ./acme.nix
