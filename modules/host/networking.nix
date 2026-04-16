@@ -38,13 +38,4 @@ in {
     enable = true;
     allowedTCPPorts = [ 22 homelab.edge.port ];
   };
-
-  environment.systemPackages = with pkgs; [
-    git
-    git-lfs
-    delta
-    networkmanager
-    iw
-    wirelesstools
-  ];
 }
