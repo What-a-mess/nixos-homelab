@@ -12,9 +12,11 @@
     allowedUDPPorts = [ 53 ];
     trustedInterfaces = [ "lo" "tun0" ];
     extraCommands = ''
+      iptables -A INPUT -p tcp -s 192.168.31.0/24 --dport 22 -j ACCEPT
       iptables -A FORWARD -j ACCEPT
     '';
     extraStopCommands = ''
+      iptables -D INPUT -p tcp -s 192.168.31.0/24 --dport 22 -j ACCEPT || true
       iptables -D FORWARD -j ACCEPT || true
     '';
   };
