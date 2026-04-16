@@ -1,7 +1,8 @@
 { homelab, pkgs, ... }:
 let
-  inherit (homelab) images ports;
+  inherit (homelab) appVm images ports;
   stateRoot = homelab.appVm.stateVolume.mountPoint;
+  rsshubEnvFile = "${appVm.guestSecretsPath}/rsshub.env";
 in {
   virtualisation.podman = {
     enable = true;
@@ -15,6 +16,7 @@ in {
     rsshub = {
       image = images.rsshub;
       autoStart = true;
+      environmentFiles = [ rsshubEnvFile ];
       environment = {
         NODE_ENV = "production";
         TZ = homelab.timeZone;
@@ -27,6 +29,10 @@ in {
       ];
       extraOptions = [ "--network=host" ];
     };
+  };
+
+  systemd.services.podman-rsshub = {
+    unitConfig.ConditionPathExists = rsshubEnvFile;
   };
 
   environment.systemPackages = with pkgs; [

@@ -14,6 +14,16 @@ in {
       }
     ];
 
+    shares = [
+      {
+        proto = "virtiofs";
+        source = appVm.hostSecretsPath;
+        mountPoint = appVm.guestSecretsPath;
+        tag = "app-vm-secrets";
+        securityModel = "none";
+      }
+    ];
+
     volumes = [
       {
         image = appVm.stateVolume.image;
