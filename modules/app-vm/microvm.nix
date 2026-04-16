@@ -38,5 +38,11 @@ in {
   networking.firewall = {
     enable = true;
     allowedTCPPorts = [ ports.app.guest.rsshub ];
+    extraCommands = ''
+      iptables -A INPUT -p tcp -s ${homelab.host.lanCidr} --dport 22 -j ACCEPT
+    '';
+    extraStopCommands = ''
+      iptables -D INPUT -p tcp -s ${homelab.host.lanCidr} --dport 22 -j ACCEPT || true
+    '';
   };
 }
