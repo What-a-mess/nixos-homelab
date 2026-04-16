@@ -17,6 +17,8 @@ in {
     (lib.mkIf hasSecretFile {
       rsshub-env = {
         file = secretFile;
+        path = "/run/agenix/rsshub.env";
+        symlink = false;
         mode = "0640";
         owner = "root";
         group = "root";
@@ -25,6 +27,8 @@ in {
     (lib.mkIf hasEdgeAliyunFile {
       edge-aliyun-env = {
         file = edgeAliyunFile;
+        path = "/run/agenix/edge-aliyun.env";
+        symlink = false;
         mode = "0400";
         owner = "root";
         group = "root";
