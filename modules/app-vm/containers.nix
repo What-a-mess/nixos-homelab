@@ -32,6 +32,11 @@ in {
   };
 
   systemd.services.podman-rsshub = {
+    environment = {
+      HTTP_PROXY = "http://192.168.31.214:7890";
+      HTTPS_PROXY = "http://192.168.31.214:7890";
+      NO_PROXY = "127.0.0.1,localhost,192.168.31.0/24,192.168.31.213";
+    };
     unitConfig.ConditionPathExists = rsshubEnvFile;
   };
 
