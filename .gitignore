@@ -2,6 +2,10 @@
 .envrc
 *.env
 *.secret
+*.key
+*.csr
+*.srl
+*.p12
 secrets/*.local
 result
 result-*
