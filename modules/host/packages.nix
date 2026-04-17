@@ -7,6 +7,7 @@
     neovim
     vim
     nano
+    openssl
     networkmanager
     iw
     wirelesstools
