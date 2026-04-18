@@ -4,7 +4,7 @@ set -euo pipefail
 usage() {
   cat <<'EOF'
 Usage:
-  issue-client-cert.sh <device-name> [common-name]
+  issue-client-cert.sh [--force] <device-name> [common-name]
 
 Environment overrides:
   PKI_ROOT        default: /srv/data/edge/pki
@@ -17,6 +17,7 @@ Environment overrides:
 
 Examples:
   issue-client-cert.sh iphone
+  issue-client-cert.sh --force iphone
   P12_PASSWORD=secret issue-client-cert.sh macbook "MacBook Pro"
 EOF
 }
@@ -24,6 +25,17 @@ EOF
 if [ "${1:-}" = "" ] || [ "${1:-}" = "-h" ] || [ "${1:-}" = "--help" ]; then
   usage
   exit "${1:+0}"
+fi
+
+FORCE=0
+if [ "${1:-}" = "--force" ]; then
+  FORCE=1
+  shift
+fi
+
+if [ "${1:-}" = "" ]; then
+  usage
+  exit 1
 fi
 
 DEVICE_NAME="$1"
@@ -54,12 +66,17 @@ fi
 mkdir -p "$DEVICE_DIR"
 chmod 700 "$DEVICE_DIR"
 
-for file in "$KEY_FILE" "$CSR_FILE" "$CERT_FILE" "$P12_FILE" "$EXT_FILE"; do
-  if [ -e "$file" ]; then
-    echo "refusing to overwrite existing device material: $file" >&2
-    exit 1
-  fi
-done
+if [ "$FORCE" -eq 1 ]; then
+  rm -f "$KEY_FILE" "$CSR_FILE" "$CERT_FILE" "$P12_FILE" "$EXT_FILE"
+else
+  for file in "$KEY_FILE" "$CSR_FILE" "$CERT_FILE" "$P12_FILE" "$EXT_FILE"; do
+    if [ -e "$file" ]; then
+      echo "refusing to overwrite existing device material: $file" >&2
+      echo "rerun with --force to replace this device certificate bundle" >&2
+      exit 1
+    fi
+  done
+fi
 
 openssl genrsa -out "$KEY_FILE" 2048
 chmod 600 "$KEY_FILE"
