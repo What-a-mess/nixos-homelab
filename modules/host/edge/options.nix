@@ -22,6 +22,21 @@ in
       description = "Whether DDNS and certificates should also cover the apex domain.";
     };
 
+    acme = {
+      email = lib.mkOption {
+        type = lib.types.nullOr lib.types.str;
+        default = null;
+        example = "admin@example.com";
+        description = "Contact email used for ACME registration and renewal reminders.";
+      };
+
+      staging = lib.mkOption {
+        type = lib.types.bool;
+        default = false;
+        description = "Whether to use the Let's Encrypt staging ACME directory.";
+      };
+    };
+
     services = lib.mkOption {
       type = lib.types.attrsOf (lib.types.submodule ({ ... }: {
         options = {
