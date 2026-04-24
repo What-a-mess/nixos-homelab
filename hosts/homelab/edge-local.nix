@@ -4,6 +4,6 @@
     port = 28443;
     manageApex = false;
     acme.email = "wamess-acme@proton.me";
-    acme.staging = true;
+    acme.staging = false;
   };
 }
