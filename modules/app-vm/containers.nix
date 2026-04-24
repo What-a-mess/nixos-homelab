@@ -12,12 +12,13 @@ in {
     autoPrune.enable = true;
   };
 
-  environment.etc."containers/storage.conf".text = ''
-    [storage]
-    driver = "overlay"
-    runroot = "/run/containers/storage"
-    graphroot = "${podmanGraphRoot}"
-  '';
+  virtualisation.containers.storage.settings = {
+    storage = {
+      driver = "overlay";
+      runroot = "/run/containers/storage";
+      graphroot = podmanGraphRoot;
+    };
+  };
 
   virtualisation.oci-containers.backend = "podman";
   virtualisation.oci-containers.containers = {
