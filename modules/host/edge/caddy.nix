@@ -40,14 +40,16 @@ let
   caddyfileText =
     let
       renderedServices = lib.mapAttrsToList renderServiceBlock edge.services;
+      globalBlock = ''
+        {
+          debug
+        }
+      '';
     in
     if renderedServices == [ ] then
-      ''
-        {
-        }
-      ''
+      globalBlock
     else
-      lib.concatStringsSep "\n" renderedServices;
+      lib.concatStringsSep "\n\n" ([ globalBlock ] ++ renderedServices);
 
   generatedCaddyfile = pkgs.writeText "edge-caddyfile" caddyfileText;
 in
