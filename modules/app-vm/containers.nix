@@ -2,6 +2,7 @@
 let
   inherit (homelab) appVm images ports;
   stateRoot = homelab.appVm.stateVolume.mountPoint;
+  podmanGraphRoot = "${stateRoot}/containers/storage";
   rsshubEnvFile = "${appVm.guestSecretsPath}/rsshub.env";
 in {
   virtualisation.podman = {
@@ -10,6 +11,13 @@ in {
     defaultNetwork.settings.dns_enabled = true;
     autoPrune.enable = true;
   };
+
+  environment.etc."containers/storage.conf".text = ''
+    [storage]
+    driver = "overlay"
+    runroot = "/run/containers/storage"
+    graphroot = "${podmanGraphRoot}"
+  '';
 
   virtualisation.oci-containers.backend = "podman";
   virtualisation.oci-containers.containers = {
@@ -37,6 +45,9 @@ in {
       HTTPS_PROXY = "http://192.168.31.214:7890";
       NO_PROXY = "127.0.0.1,localhost,192.168.31.0/24,192.168.31.213";
     };
+    serviceConfig.RestartSec = 15;
+    startLimitBurst = 5;
+    startLimitIntervalSec = 300;
     unitConfig.ConditionPathExists = rsshubEnvFile;
   };
 
