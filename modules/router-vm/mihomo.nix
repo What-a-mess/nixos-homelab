@@ -20,6 +20,7 @@ in {
     ];
     serviceConfig = {
       WorkingDirectory = "${stateRoot}/mihomo";
+      ReadWritePaths = [ "${stateRoot}/mihomo" ];
     };
     path = [ pkgs.coreutils ];
     preStart = ''
