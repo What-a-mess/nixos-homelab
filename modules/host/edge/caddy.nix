@@ -28,6 +28,10 @@ let
     in
     ''
       ${siteHost}:${toString edge.port} {
+        log {
+          output stdout
+          format console
+        }
       ${tlsBlock}
         reverse_proxy ${backend}
       }
