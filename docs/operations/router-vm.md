@@ -15,10 +15,13 @@ This document explains how to operate `router-vm`.
 The real `mihomo` config is stored on the host at:
 
 - `/srv/data/router/mihomo/config.yaml`
+- `/srv/data/router/mihomo/Country.mmdb`
 
 That directory is mounted into the guest at:
 
 - `/var/lib/router-vm/mihomo-config`
+
+`Country.mmdb` is synced into Mihomo's working directory before the service starts so GEOIP rules do not depend on runtime downloads.
 
 ## Bootstrap Behavior
 
@@ -34,5 +37,6 @@ This is expected bootstrap state.
 1. Deploy the host and `router-vm`.
 2. Confirm that `router-vm` is reachable at `192.168.31.214`.
 3. Place a valid `mihomo` config at `/srv/data/router/mihomo/config.yaml`.
-4. Restart `mihomo` inside `router-vm` or rebuild the host.
-5. Point a test client at `192.168.31.214` either as default gateway or proxy endpoint.
+4. Update `/srv/data/router/mihomo/Country.mmdb`, for example with `scripts/update-country-mmdb.sh`.
+5. Restart `mihomo` inside `router-vm` or rebuild the host.
+6. Point a test client at `192.168.31.214` either as default gateway or proxy endpoint.
