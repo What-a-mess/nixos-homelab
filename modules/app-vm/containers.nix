@@ -31,6 +31,7 @@ in {
         TZ = homelab.timeZone;
         PORT = toString ports.app.guest.rsshub;
         CACHE_EXPIRE = "3600";
+        PROXY_URI = "http://192.168.31.214:7890";
       };
       volumes = [
         "${stateRoot}/rsshub:/app/.cache:rw"
