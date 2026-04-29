@@ -3,6 +3,10 @@ let
   inherit (homelab) host;
   edge = config.homelab.edge;
   inherit (host.network) address bridgeInterface dns gateway prefixLength uplinkInterface;
+  edgeServiceHostnames =
+    builtins.map
+      (service: "${service.host}.${edge.domain}")
+      (builtins.attrValues edge.services);
 in {
   networking.hostName = host.hostName;
   networking.useDHCP = false;
@@ -27,6 +31,7 @@ in {
     interface = bridgeInterface;
   };
   networking.nameservers = dns;
+  networking.hosts.${address} = edgeServiceHostnames;
 
   systemd.network.enable = true;
   systemd.network.networks."30-microvm-taps" = {
