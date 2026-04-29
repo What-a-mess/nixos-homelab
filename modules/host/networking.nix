@@ -7,6 +7,7 @@ let
     builtins.map
       (service: "${service.host}.${edge.domain}")
       (builtins.attrValues edge.services);
+  sshHostname = "ssh.${edge.domain}";
 in {
   networking.hostName = host.hostName;
   networking.useDHCP = false;
@@ -31,7 +32,7 @@ in {
     interface = bridgeInterface;
   };
   networking.nameservers = dns;
-  networking.hosts.${address} = edgeServiceHostnames;
+  networking.hosts.${address} = edgeServiceHostnames ++ [ sshHostname ];
 
   systemd.network.enable = true;
   systemd.network.networks."30-microvm-taps" = {
