@@ -3,8 +3,10 @@ let
   appSecretsHostPath = homelab.appVm.hostSecretsPath;
   secretFile = ../../secrets/rsshub.env.age;
   edgeAliyunFile = ../../secrets/edge-aliyun.env.age;
+  trojanPasswordFile = ../../secrets/trojan-password.age;
   hasSecretFile = builtins.pathExists secretFile;
   hasEdgeAliyunFile = builtins.pathExists edgeAliyunFile;
+  hasTrojanPasswordFile = builtins.pathExists trojanPasswordFile;
   rsshubSecret =
     if hasSecretFile then
       config.age.secrets.rsshub-env.path
@@ -28,6 +30,16 @@ in {
       edge-aliyun-env = {
         file = edgeAliyunFile;
         path = "/run/agenix/edge-aliyun.env";
+        symlink = false;
+        mode = "0400";
+        owner = "root";
+        group = "root";
+      };
+    })
+    (lib.mkIf hasTrojanPasswordFile {
+      trojan-password = {
+        file = trojanPasswordFile;
+        path = "/run/agenix/trojan-password";
         symlink = false;
         mode = "0400";
         owner = "root";

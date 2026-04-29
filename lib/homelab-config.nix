@@ -178,49 +178,49 @@
         host = "rsshub";
         backendHost = "192.168.31.213";
         backendPort = 1200;
-        requireMtls = true;
+        requireMtls = false;
       };
 
       jellyfin = {
         host = "jellyfin";
         backendHost = "192.168.31.212";
         backendPort = 8096;
-        requireMtls = true;
+        requireMtls = false;
       };
 
       sonarr = {
         host = "sonarr";
         backendHost = "192.168.31.212";
         backendPort = 8989;
-        requireMtls = true;
+        requireMtls = false;
       };
 
       radarr = {
         host = "radarr";
         backendHost = "192.168.31.212";
         backendPort = 7878;
-        requireMtls = true;
+        requireMtls = false;
       };
 
       prowlarr = {
         host = "prowlarr";
         backendHost = "192.168.31.212";
         backendPort = 9696;
-        requireMtls = true;
+        requireMtls = false;
       };
 
       qbittorrent = {
         host = "qb";
         backendHost = "192.168.31.212";
         backendPort = 8080;
-        requireMtls = true;
+        requireMtls = false;
       };
 
       router = {
         host = "router";
         backendHost = "192.168.31.214";
         backendPort = 9090;
-        requireMtls = true;
+        requireMtls = false;
       };
     };
   };

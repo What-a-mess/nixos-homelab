@@ -22,6 +22,16 @@ in
       description = "Whether DDNS and certificates should also cover the apex domain.";
     };
 
+    allowedSourceRanges = lib.mkOption {
+      type = lib.types.listOf lib.types.str;
+      default = [
+        "127.0.0.1/8"
+        "::1/128"
+        homelab.host.lanCidr
+      ];
+      description = "CIDR ranges allowed to reach edge services through Caddy.";
+    };
+
     acme = {
       email = lib.mkOption {
         type = lib.types.nullOr lib.types.str;
@@ -34,6 +44,26 @@ in
         type = lib.types.bool;
         default = false;
         description = "Whether to use the Let's Encrypt staging ACME directory.";
+      };
+    };
+
+    trojan = {
+      enable = lib.mkOption {
+        type = lib.types.bool;
+        default = false;
+        description = "Whether to expose a Trojan proxy endpoint on the host.";
+      };
+
+      host = lib.mkOption {
+        type = lib.types.str;
+        default = "trojan";
+        description = "Hostname prefix used for the Trojan endpoint under the edge domain.";
+      };
+
+      port = lib.mkOption {
+        type = lib.types.port;
+        default = 24443;
+        description = "Public TCP port used by the Trojan endpoint.";
       };
     };
 
@@ -57,7 +87,7 @@ in
 
           requireMtls = lib.mkOption {
             type = lib.types.bool;
-            default = true;
+            default = false;
             description = "Whether this edge service requires client certificate authentication.";
           };
         };

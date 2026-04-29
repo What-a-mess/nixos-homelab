@@ -36,6 +36,6 @@ in {
 
   networking.firewall = {
     enable = true;
-    allowedTCPPorts = [ 22 homelab.edge.port ];
+    allowedTCPPorts = [ 22 homelab.edge.port ] ++ pkgs.lib.optional homelab.edge.trojan.enable homelab.edge.trojan.port;
   };
 }

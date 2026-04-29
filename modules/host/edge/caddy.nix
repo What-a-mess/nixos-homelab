@@ -6,6 +6,7 @@ let
   serverKey = "${paths.serverPkiDir}/privkey.pem";
   clientCa = "${paths.clientCaDir}/ca.pem";
   requiresClientCa = lib.any (service: service.requireMtls) (lib.attrValues edge.services);
+  allowedRanges = lib.concatStringsSep " " edge.allowedSourceRanges;
 
   renderServiceBlock = _: service:
     let
@@ -32,6 +33,8 @@ let
           output stdout
           format console
         }
+        @denied not remote_ip ${allowedRanges}
+        respond @denied "Forbidden" 403
       ${tlsBlock}
         reverse_proxy ${backend}
       }
@@ -40,16 +43,14 @@ let
   caddyfileText =
     let
       renderedServices = lib.mapAttrsToList renderServiceBlock edge.services;
-      globalBlock = ''
-        {
-          debug
-        }
-      '';
     in
     if renderedServices == [ ] then
-      globalBlock
+      ''
+        {
+        }
+      ''
     else
-      lib.concatStringsSep "\n\n" ([ globalBlock ] ++ renderedServices);
+      lib.concatStringsSep "\n\n" renderedServices;
 
   generatedCaddyfile = pkgs.writeText "edge-caddyfile" caddyfileText;
 in

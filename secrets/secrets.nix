@@ -3,4 +3,5 @@ let
 in {
   "rsshub.env.age".publicKeys = [ homelabHost ];
   "edge-aliyun.env.age".publicKeys = [ homelabHost ];
+  "trojan-password.age".publicKeys = [ homelabHost ];
 }

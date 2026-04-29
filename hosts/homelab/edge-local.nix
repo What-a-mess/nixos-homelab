@@ -5,5 +5,6 @@
     manageApex = false;
     acme.email = "wamess-acme@proton.me";
     acme.staging = false;
+    trojan.enable = true;
   };
 }
