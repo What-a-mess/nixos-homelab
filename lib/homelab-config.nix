@@ -173,6 +173,11 @@
     port = 28443;
     manageApex = false;
     domain = "example.com";
+    trojan = {
+      enable = false;
+      host = "trojan";
+      port = 24443;
+    };
     services = {
       rsshub = {
         host = "rsshub";

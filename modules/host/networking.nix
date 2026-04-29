@@ -1,6 +1,7 @@
-{ homelab, pkgs, ... }:
+{ config, homelab, pkgs, ... }:
 let
   inherit (homelab) host;
+  edge = config.homelab.edge;
   inherit (host.network) address bridgeInterface dns gateway prefixLength uplinkInterface;
 in {
   networking.hostName = host.hostName;
@@ -36,6 +37,6 @@ in {
 
   networking.firewall = {
     enable = true;
-    allowedTCPPorts = [ 22 homelab.edge.port ] ++ pkgs.lib.optional homelab.edge.trojan.enable homelab.edge.trojan.port;
+    allowedTCPPorts = [ 22 edge.port ] ++ pkgs.lib.optional edge.trojan.enable edge.trojan.port;
   };
 }
