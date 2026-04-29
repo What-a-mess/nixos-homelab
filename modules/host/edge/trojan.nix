@@ -2,7 +2,7 @@
 let
   edge = config.homelab.edge;
   paths = edge.paths;
-  secretFile = ../../secrets/trojan-password.age;
+  secretFile = ../../../secrets/trojan-password.age;
   hasSecretFile = builtins.pathExists secretFile;
   passwordPath =
     if hasSecretFile then
